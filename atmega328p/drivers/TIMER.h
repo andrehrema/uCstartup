@@ -6,6 +6,6 @@
 #define OCR_VALUE 125
 #define TIMER_COUNTER_VALUE (FINAL_CLOCK/OCR_VALUE)
 
-	void configure_timer();
+	void configure_TIMER();
 
 #endif

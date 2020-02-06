@@ -53,9 +53,10 @@ char * read_USART(){
 void USART_write(char *frame){ //write in usart tx buffer
 	
 	strcpy(buffer_tx, frame); //coping the frame to buffer_tx 
-
 	index_tx = 0;
+	all_data_sent = SENDING;	
 	UDR0 = buffer_tx[index_tx];
+
 	
 }
 

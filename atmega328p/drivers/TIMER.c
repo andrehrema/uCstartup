@@ -12,7 +12,7 @@ ISR (TIMER2_COMPA_vect){ //timer interruption handler
 }
 
 
-void configure_timer(){
+void configure_TIMER(){
 
         TCCR2A = (1<<WGM21); //timer counts until OCRA value
         OCR2A  = OCR_VALUE; //OCRA value
