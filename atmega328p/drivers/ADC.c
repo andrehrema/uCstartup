@@ -1,9 +1,11 @@
 #include<avr/io.h>
 #include<stdint.h>
+#include<avr/interrupt.h>
 #include"../devices/humidity_sensor.h"
 
-extern volatile uint8_t sensor_read;
+static volatile uint8_t sensor_read;
 static volatile uint16_t buffer_ADC;
+
 ISR(ADC_vect){
 	ADMUX &= ~(1<<(sensor_read));
 
@@ -15,7 +17,7 @@ ISR(ADC_vect){
 void configure_ADC(){
 
 	ADMUX |= (1<<REFS0); //short circuiting AVCC with AREF, ADC0 is the port enable to be read
-	ADCSRA |= (1<<ADCEN)+(1<<ADIE)+(1<<ADPS2)+(1<<ADATE); // enabling ADC, interruption enable and clock divided by 32, resulting in 62.5 kHz, auto triggering enabled
+	ADCSRA |= (1<<ADEN)+(1<<ADIE)+(1<<ADPS2)+(1<<ADATE); // enabling ADC, interruption enable and clock divided by 32, resulting in 62.5 kHz, auto triggering enabled
 	// ADTS2..0 = 0, free running.
 }
 

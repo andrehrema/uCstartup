@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<string.h>
 
-#include"USART.h"
+#include"macros.h"
 #include<avr/interrupt.h>
 
 
@@ -32,7 +32,7 @@ ISR(USART_TX_vect){ // transmitting IST
 }
 
 ISR(USART_UDRE_vect){
-	if !(all_data_sent)
+	if (!(all_data_sent))
 		UDR0 = buffer_tx[all_data_sent];
 }
 
@@ -51,7 +51,7 @@ void configure_USART(){
 
 char * read_USART(){
 
-	return &value;
+//	return &value;
 }
 
 void send_USART(char *frame){ //write in usart tx buffer

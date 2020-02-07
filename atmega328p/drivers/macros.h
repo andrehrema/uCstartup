@@ -1,0 +1,21 @@
+#define F_CPU 2000000
+#define BAUDRATE 9600
+#define PRESCALER ((F_CPU / (BAUDRATE * 16UL)) -1)
+
+#define SENT 1
+#define NOTHING_TO_SEND 1
+#define SENDING 0
+
+
+#define CLOCK_DIVIDER 128
+#define FINAL_CLOCK (2000000/CLOCK_DIVIDER)
+#define OCR_VALUE 125
+#define TIMER_COUNTER_VALUE (FINAL_CLOCK/OCR_VALUE)
+
+
+#define N_SENSORS 2
+#define SENSOR_BUFF_LENGTH 4
+#define OK 1
+#define STABLE 2
+#define NOK 3
+

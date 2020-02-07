@@ -1,16 +1,16 @@
 CC=avr-gcc
 
-CFLAGS=-
+CFLAGS=-Wall -g -Os -mmcu=atmega328p
 
 USART=drivers/USART
-TIMER=driver/TIMER
-ADC=driver/ADC
+TIMER=drivers/TIMER
+ADC=drivers/ADC
 
 SENSOR=devices/humidity_sensor
 
-USART_DEPS=driver/UART.h
-TIMER_DEPS=driver/TIMER.h
-ADC_DEPS=driver/ADC.h
+USART_DEPS=drivers/UART.h
+TIMER_DEPS=drivers/TIMER.h
+ADC_DEPS=drivers/ADC.h
 
 SENSOR_DEPS=devices/humidity_sensor.h
 
@@ -19,23 +19,23 @@ OBJ=main
 $(OBJ).hex: $(OBJ).bin
 	avr-objcopy -j .text -j .data -O ihex $^ $@
 
-$(OBJ).bin: $(OBJ) $(USART).o $(TIMER.o) $(ADC).o $(SENSOR).o
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJ).bin: $(OBJ).o $(ADC).o $(USART).o $(TIMER).o  $(SENSOR).o
+	$(CC) $^ -o $@
 
 $(OBJ).o: $(OBJ).c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(SENSOR).o = $(SENSOR).c $(SENSOR_DEPS)
+$(SENSOR).o: $(SENSOR).c $(SENSOR_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(USART).o = $(USART).c $(UART_DEPS)
+$(USART).o: $(USART).c $(UART_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 
-$(TIMER).o = $(TIMER).o $(TIMER_DEPS)
+$(TIMER).o: $(TIMER).c $(TIMER_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(ADC).o = $(ADC).o $(ADC_DEPS)
+$(ADC).o: $(ADC).c $(ADC_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 

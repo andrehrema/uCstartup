@@ -1,9 +1,10 @@
 #include<avr/io.h>
 #include<stdint.h>
-#include<interrupt.h>
-#include<sleep.h>
+#include<avr/interrupt.h>
+#include<avr/sleep.h>
 #include<string.h>
 
+#include"drivers/macros.h"
 #include"drivers/ADC.h"
 #include"drivers/TIMER.h"
 #include"drivers/USART.h"
@@ -45,8 +46,8 @@ int main (void){
 
 		if(timer_counter == TIMER_COUNTER_VALUE){
 			read_ADC(); //reading data in ADC with free run
-			PORTB |= 2; //enabling led
-			for (int index=0; index<SENSOR_BUFF_LEN; index++){ //updating mean and standard deviation
+			PORTB ^= 2; //enabling led
+			for (int index=0; index < SENSOR_BUFF_LENGTH; index++){ //updating mean and standard deviation
 				calc_mean(&mapped_sensor[index]);
 				calc_std_dev(&mapped_sensor[index]);
 			}
@@ -66,14 +67,14 @@ int main (void){
 
 		if(all_sent() && sensor_send<N_SENSORS){ //sending a package wether the previous was sent, or the buffer is empty
 			
-			sprintf(package_USART, "%s|%i|%i|%i|%i!", &mapped_sensor[sensor_send].owner_name, mapped_sensor[sensor_send].PIN_owner, mapped_sensor[sensor_send].state,mapped_sensor[sensor_send].data[mapped_sensor.index]);
-			send_USART(&package);
+			sprintf(package_USART, "%s|%i|%i|%i|%i!", &mapped_sensor[sensor_send].owner_name, mapped_sensor[sensor_send].PIN_owner, mapped_sensor[sensor_send].state,mapped_sensor[sensor_send].buffer[mapped_sensor[sensor_send].index_buf]);
+			send_USART(&package_USART);
 			sensor_send++;
 		}
-		/*
-		else if(){ // send next buffer's character
-			USART_next();
-		}*/
+		
+		//else if(){ // send next buffer's character
+		//	USART_next();
+		//}
 
 
 	}

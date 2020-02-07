@@ -1,7 +1,7 @@
 #include<avr/io.h>
 #include<stdint.h>
-#include"ADC.h"
-#include"TIMER.h"
+#include"macros.h"
+
 
 
 extern volatile uint16_t timer_counter;
@@ -9,6 +9,7 @@ extern volatile uint16_t timer_counter;
 ISR (TIMER2_COMPA_vect){ //timer interruption handler
 
         timer_counter+=1;
+	PORTB|=4;
 }
 
 

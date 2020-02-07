@@ -1,11 +1,6 @@
 #ifndef HUMIDITY_SENSOR_H
 #define HUMIDITY_SENSOR_H
 
-#define N_SENSORS 2
-#define SENSOR_BUFF_LENGTH 4
-#define OK 1
-#define STABLE 2
-#define NOK 3
 	typedef struct sensor_map sensor;
 
 	struct sensor_map{
@@ -21,7 +16,7 @@
 		float std_dev;
 
 		int8_t state;
-	}
+	};
 
 	void initiate_sensor(sensor *mapped_sensor, char *owner, int PIN_owner, int PIN);
 	void add_data_sensor(sensor *mapped_sensor, int* read_value);
