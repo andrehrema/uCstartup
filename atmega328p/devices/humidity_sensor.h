@@ -24,7 +24,8 @@
 	}
 
 	void initiate_sensor(sensor *mapped_sensor, char *owner, int PIN_owner, int PIN);
+	void add_data_sensor(sensor *mapped_sensor, int* read_value);
 	void calc_std_dev(sensor *mapped_sensor);
 	void calc_mean(sensor *mapped_sensor);
-	void add_data_sensor(sensor *mapped_sensor, int* read_value);
+
 #endif

@@ -19,9 +19,9 @@ void add_data_sensor(sensor *mapped_sensor, int16_t *read_value){
 	
 	mapped_sensor->index_buf++;
 
-	if (mapped_sensor->index > SENSOR_BUFF_LENGTH){
+	if (mapped_sensor->index >= SENSOR_BUFF_LENGTH)
 		mapped_sensor->index = 0;
-	}
+	
 	float lower_limit = mapped_sensor->mean - 0.1* mapped_sensor->std_dev;
 	float upper_limit = mapped_sensor->mean + 0.1* mapped_sensor->std_dev;
 	if((*read_value > upper_limit) || (*read_value < lower_limit))
@@ -42,7 +42,7 @@ void calc_std_dev(sensor *mapped_sensor){
 	mapped_sensor->std_dev = sqrt(std_dev / SENSOR_BUFF_LEN);
 }
 
-void calc_mean(mapped_sensor *sensor){
+void calc_mean(sensor mapped_sensor){
 	mapped_sensor->mean=0.0;
 	for (int i=0; i<SENSOR_BUFF_LEN;i++){
 		mapped_sensor->mean += mapped_sensor->buffer[i];

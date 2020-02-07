@@ -10,30 +10,32 @@
 #include"devices/humidity_sensor.h"
 
 volatile int timer_counter = 0; //value of timer_counter
-volatile int8_t sensor_read = 1; //sensor being read
-volatile int16_t buffer_ADC;
 
 int main (void){
-
+	//////////////////////////  CONFIGURE THE PORTS /////////////////////////////
         CLKPR = (1<<CLKPCE); // enabling bit writing in clock divider
         CLKPR = 2; //clock divider = 4, from 8 MHz to 2 MHZ
 
-	configure_TIMER(); //Clock = 250K, counts until 250
+
+	DDRB = 7; // PB0, PB1, PB2 como saída
+
+
+	configure_TIMER(); //Clock = 250 KHz, counts until 125
 	configure_USART(); //baud_rate = 9600, RX e TX interruption, even parity, 8 data bits
 	configure_ADC(); // clock = 62.5 KHz, AREF = AVCC, auto triggering enabled, trigger_event = free running	
 
 	
 	int sensor_send = 0;
-	char owner[]="Andre"
-	int PIN_owner = 1;
-	char package_USART[50]
+	char owner[]="Andre"; //sensor owner
+	int PIN_owner = 1; // PIN owner
+	char package_USART[50]; //buffer for USART message
 
-	sensor mapped_sensor[N_SENSORS];
+	sensor mapped_sensor[N_SENSORS]; //sensors mapped
 	//detect sensors
 	//
 	
 	for (int PIN = 1; PIN<N_SENSORS+1; PIN++){
-		initiate_sensor(&mapped_sensor[PIN-1], owner[0], PIN_owner, PIN);
+		initiate_sensor(&mapped_sensor[PIN-1], owner[0], PIN_owner, PIN); //initiating routine
 	}
 
 	sei(); //enabling interrupt
@@ -43,30 +45,37 @@ int main (void){
 
 		if(timer_counter == TIMER_COUNTER_VALUE){
 			read_ADC(); //reading data in ADC with free run
-			timer_counter = 0;
-			sensor_send = 0;
+			PORTB |= 2; //enabling led
+			for (int index=0; index<SENSOR_BUFF_LEN; index++){ //updating mean and standard deviation
+				calc_mean(&mapped_sensor[index]);
+				calc_std_dev(&mapped_sensor[index]);
+			}
+
+			timer_counter = 0; //resetting timer counter
+			sensor_send = 0; // sensor_send = 0
 		}
 
-		if (sensor_read < N_SENSORS){
-			add_data_sensor(&mapped_sensor[sensor_read],buffer_ADC);
-			buffer_adc;
-			sensor_read++;
-		        ADMUX |= (1<<(sensor_read)); //read next sensor
+		else if ( !(final_channel()) && ( ready_ADC() ) ){
+			add_data_sensor(&mapped_sensor[ADC_channel()],read_ADC());
+			next_channel();
 		}
-		if(sensor_read == N_SENSORS){
+		if(final_channel()){
 			stop_ADC();
 		}
 		
 
-		if(all_data_sent() && sensor_send<N_SENSORS){ //sending a package wether the previous was sent, or the buffer is empty
+		if(all_sent() && sensor_send<N_SENSORS){ //sending a package wether the previous was sent, or the buffer is empty
 			
-			sprintf(package_USART, "%s|%i|%i|%i|%i!", mapped_sensor[sensor_send].owner_name[sensor_send], mapped_sensor[sensor_send].PIN_owner, mapped_sensor[sensor_send].state,mapped_sensor[sensor_send].data);
-			USART_send(&package);
+			sprintf(package_USART, "%s|%i|%i|%i|%i!", &mapped_sensor[sensor_send].owner_name, mapped_sensor[sensor_send].PIN_owner, mapped_sensor[sensor_send].state,mapped_sensor[sensor_send].data[mapped_sensor.index]);
+			send_USART(&package);
 			sensor_send++;
 		}
+		/*
 		else if(){ // send next buffer's character
 			USART_next();
-		}
+		}*/
+
+
 	}
 		
 

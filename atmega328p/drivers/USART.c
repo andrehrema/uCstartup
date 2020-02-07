@@ -31,6 +31,10 @@ ISR(USART_TX_vect){ // transmitting IST
 	}
 }
 
+ISR(USART_UDRE_vect){
+	if !(all_data_sent)
+		UDR0 = buffer_tx[all_data_sent];
+}
 
 void configure_USART(){
 
@@ -50,7 +54,7 @@ char * read_USART(){
 	return &value;
 }
 
-void USART_write(char *frame){ //write in usart tx buffer
+void send_USART(char *frame){ //write in usart tx buffer
 	
 	strcpy(buffer_tx, frame); //coping the frame to buffer_tx 
 	index_tx = 0;
@@ -60,10 +64,6 @@ void USART_write(char *frame){ //write in usart tx buffer
 	
 }
 
-void next_USART(){ //send next buffer's character
-
-	UDR0 = buffer_tx[index_tx];
-}
 
 uint8_t all_sent(){ //all buffer has been sent
 	return all_data_sent;

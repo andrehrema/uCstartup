@@ -19,7 +19,7 @@ void configure_TIMER(){
 
         TIMSK2 = (1<<OCIE2A); // interruption when timer value == OCRA value
 
-        TCCR2B = CLOCK_DIVIDER; // timer dividided by 8, from 2MHz to 250KHz
+        TCCR2B = CLOCK_DIVIDER; // clock timer dividided, from 2 MHz to 15625 Hz
         TCNT2 = 0; //timer intial value
 
 }

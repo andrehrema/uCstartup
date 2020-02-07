@@ -3,7 +3,7 @@
 #include"../devices/humidity_sensor.h"
 
 extern volatile uint8_t sensor_read;
-extern volatile uint16_t buffer_ADC;
+static volatile uint16_t buffer_ADC;
 ISR(ADC_vect){
 	ADMUX &= ~(1<<(sensor_read));
 
@@ -30,4 +30,29 @@ void stop_ADC(){
 	
 	ADCSRA &= ~ ((1<<ADSC) + (1<<ADIF)); //disabling convertion
 	sensor_read = 0;
+}
+
+void next_channel(){
+	sensor_read++;
+	ADMUX |= (1<<(sensor_read)); //read next sensor
+}
+
+int read_ADC(){ //return the read value
+	return buffer_ADC;
+}
+
+
+
+int ready_ADC(){ //return true if the ADC has already read a new value
+	return ADIF;
+}
+
+int final_channel(){ //return true if the last channel has been already read
+
+	return sensor_read & N_SENSORS;
+}
+
+
+int ADC_channel(){
+	return sensor_read;
 }
