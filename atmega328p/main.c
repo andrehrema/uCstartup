@@ -11,6 +11,7 @@
 #include "devices/humidity_sensor.h"
 
 volatile int timer_counter = 0; //value of timer_counter
+volatile uint8_t converteu;
 
 int main (void){
 	//////////////////////////  CONFIGURE THE PORTS /////////////////////////////
@@ -54,42 +55,41 @@ int main (void){
 	*/
 
 		if(timer_counter == TIMER_COUNTER_VALUE){
+			initial_state_ADC();
 			start_ADC(); //reading data in ADC with free run
 			PORTB ^= 4;
 			for (int index=0; index < SENSOR_BUFF_LENGTH; index++){ //updating mean and standard deviation
 				calc_mean(&mapped_sensor[index]);
 				calc_std_dev(&mapped_sensor[index]);
 			}
-
+			sensor_send = 0;
 			timer_counter = 0; //resetting timer counter
 		}
 
-		if ( !(final_channel()) && ( ready_ADC() ) ){
+		if(final_channel() && converteu){
 			add_data_sensor(&mapped_sensor[ADC_channel()],read_ADC());
-			next_channel();
+			converteu = 0;
+			//next_channel();
+			start_ADC();
 		}
-		else if(final_channel()){
-
-			//PORTB |=1;
+		else{	
+			PORTB &= ~255;
+			//PORTB ^= 1;
+			converteu = 0;
 			stop_ADC();
 		}
-		
-
-		if(all_sent() && sensor_send<N_SENSORS){ //sending a package wether the previous was sent, or the buffer is empty
+	
+		/*if(all_sent() && sensor_send<N_SENSORS){ //sending a package wether the previous was sent, or the buffer is empty
 			
 			sprintf(package_USART, "%s|%i|%i|%i|%i!", &mapped_sensor[sensor_send].owner_name, mapped_sensor[sensor_send].PIN_owner, mapped_sensor[sensor_send].state,mapped_sensor[sensor_send].buffer[mapped_sensor[sensor_send].index_buf]);
 			send_USART(&package_USART);
 			sensor_send++;
-		}
+		}*/
 		
 		//else if(){ // send next buffer's character
 		//	USART_next();
 		//}
-
-	
 	}
-		
-
-
+	
 	return 0;
 }
