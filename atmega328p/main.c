@@ -1,14 +1,14 @@
-#include<avr/io.h>
-#include<stdint.h>
-#include<avr/interrupt.h>
-#include<avr/sleep.h>
-#include<string.h>
+#include <avr/io.h>
+#include <stdint.h>
+#include <avr/interrupt.h>
+#include <avr/sleep.h>
+#include <string.h>
 
-#include"drivers/macros.h"
-#include"drivers/ADC.h"
-#include"drivers/TIMER.h"
-#include"drivers/USART.h"
-#include"devices/humidity_sensor.h"
+#include "drivers/macros.h"
+#include "drivers/ADC.h"
+#include "./drivers/TIMER.h"
+#include "drivers/USART.h"
+#include "devices/humidity_sensor.h"
 
 volatile int timer_counter = 0; //value of timer_counter
 
@@ -22,8 +22,8 @@ int main (void){
 
 
 	configure_TIMER(); //Clock = 250 KHz, counts until 125
-	configure_USART(); //baud_rate = 9600, RX e TX interruption, even parity, 8 data bits
-	configure_ADC(); // clock = 62.5 KHz, AREF = AVCC, auto triggering enabled, trigger_event = free running	
+	//configure_USART(); //baud_rate = 9600, RX e TX interruption, even parity, 8 data bits
+	//configure_ADC(); // clock = 62.5 KHz, AREF = AVCC, auto triggering enabled, trigger_event = free running	
 
 	
 	int sensor_send = 0;
@@ -39,14 +39,24 @@ int main (void){
 		initiate_sensor(&mapped_sensor[PIN-1], owner[0], PIN_owner, PIN); //initiating routine
 	}
 
-	sei(); //enabling interrupt
+
 	while(1){
+	
+		sei(); //enabling interrupt
 		set_sleep_mode(SLEEP_MODE_IDLE); //idle mode,clock_cpu disabled, clock_flash disabled
 		sleep_mode(); // sleeping
 
+		
 		if(timer_counter == TIMER_COUNTER_VALUE){
+			PORTB ^= 4;
+			timer_counter = 0;
+		}
+
+
+
+	/*	if(timer_counter == TIMER_COUNTER_VALUE){
 			read_ADC(); //reading data in ADC with free run
-			PORTB ^= 2; //enabling led
+			
 			for (int index=0; index < SENSOR_BUFF_LENGTH; index++){ //updating mean and standard deviation
 				calc_mean(&mapped_sensor[index]);
 				calc_std_dev(&mapped_sensor[index]);
@@ -76,7 +86,7 @@ int main (void){
 		//	USART_next();
 		//}
 
-
+	*/
 	}
 		
 

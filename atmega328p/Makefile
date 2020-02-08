@@ -20,9 +20,9 @@ $(OBJ).hex: $(OBJ).bin
 	avr-objcopy -j .text -j .data -O ihex $^ $@
 
 $(OBJ).bin: $(OBJ).o $(ADC).o $(USART).o $(TIMER).o  $(SENSOR).o
-	$(CC) $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@
 
-$(OBJ).o: $(OBJ).c
+$(OBJ).o: $(OBJ).c $(TIMER_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(SENSOR).o: $(SENSOR).c $(SENSOR_DEPS)
@@ -31,7 +31,6 @@ $(SENSOR).o: $(SENSOR).c $(SENSOR_DEPS)
 $(USART).o: $(USART).c $(UART_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-
 $(TIMER).o: $(TIMER).c $(TIMER_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -39,7 +38,7 @@ $(ADC).o: $(ADC).c $(ADC_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 
-clean: $(OBJ)
+clean: $(OBJ).o
 	find . -name '*.o' -delete
 	find . -name '*.bin' -delete
 	find . -name '*.hex' -delete

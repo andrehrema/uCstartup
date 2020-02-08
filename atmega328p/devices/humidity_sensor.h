@@ -1,6 +1,7 @@
 #ifndef HUMIDITY_SENSOR_H
 #define HUMIDITY_SENSOR_H
 
+#include"../drivers/macros.h"
 	typedef struct sensor_map sensor;
 
 	struct sensor_map{

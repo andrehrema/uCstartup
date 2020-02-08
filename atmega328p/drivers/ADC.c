@@ -1,7 +1,7 @@
 #include<avr/io.h>
 #include<stdint.h>
 #include<avr/interrupt.h>
-#include"../devices/humidity_sensor.h"
+#include"macros.h"
 
 static volatile uint8_t sensor_read;
 static volatile uint16_t buffer_ADC;
