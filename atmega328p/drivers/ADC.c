@@ -8,6 +8,7 @@ static volatile uint16_t buffer_ADC;
 
 ISR(ADC_vect){
 	ADMUX &= ~(1<<(sensor_read));
+	//PORTB^=1;
 
 	buffer_ADC |= ADCL;
 	buffer_ADC |= (ADCH<<8);
@@ -15,9 +16,12 @@ ISR(ADC_vect){
 }
 
 void configure_ADC(){
-
+	
 	ADMUX |= (1<<REFS0); //short circuiting AVCC with AREF, ADC0 is the port enable to be read
 	ADCSRA |= (1<<ADEN)+(1<<ADIE)+(1<<ADPS2)+(1<<ADATE); // enabling ADC, interruption enable and clock divided by 32, resulting in 62.5 kHz, auto triggering enabled
+
+
+	//ADCSRA &= ~ADSC;
 	// ADTS2..0 = 0, free running.
 }
 
@@ -29,7 +33,7 @@ void start_ADC(){
 }
 
 void stop_ADC(){
-	
+	PORTB ^= 2;
 	ADCSRA &= ~ ((1<<ADSC) + (1<<ADIF)); //disabling convertion
 	sensor_read = 0;
 }
@@ -50,8 +54,11 @@ int ready_ADC(){ //return true if the ADC has already read a new value
 }
 
 int final_channel(){ //return true if the last channel has been already read
-
-	return sensor_read & N_SENSORS;
+	
+	if (sensor_read == N_SENSORS)
+		return 1;
+	else
+		return 0;
 }
 
 

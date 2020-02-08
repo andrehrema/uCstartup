@@ -14,7 +14,7 @@ ISR(USART_RX_vect){ // receiving ISR
         
 
 	UCSR0B &= ~(1<<TXCIE0); //disabling TX interruption
-	PORTB^=2;
+	//PORTB^=2;
 
         UCSR0B |= (1<<TXCIE0); //reabilitando instrução por transmissão
 }
@@ -37,7 +37,6 @@ ISR(USART_UDRE_vect){
 }
 
 void configure_USART(){
-
         //one stop bit
         UBRR0H = (uint8_t) ((PRESCALER >> 8) & 0x0F); //baud rate = 9600
         UBRR0L = (uint8_t) PRESCALER; // baud rate = 9600

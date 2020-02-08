@@ -7,15 +7,13 @@
 
 extern volatile uint16_t timer_counter;
 
-/*ISR(TIMER2_COMPA_vect){ //timer interruption handler
+ISR(TIMER2_COMPA_vect){ //timer interruption handler
 
         timer_counter+=1;
-	PORTB ^= 4;
-}*/
+}
 
 
 void configure_TIMER(){
-	PORTB|=1;
         TCCR2A = (1<<WGM21); //timer counts until OCRA value
         OCR2A  = OCR_VALUE; //OCRA value
 
