@@ -1,6 +1,5 @@
 #include<stdint.h>
 #include"humidity_sensor.h"
-#include"../drivers/macros.h"
 #include<string.h>
 #include<math.h>
 

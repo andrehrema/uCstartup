@@ -1,6 +1,6 @@
 CC=avr-gcc
 
-CFLAGS=-Wall -g -Os -mmcu=atmega328p
+CFLAGS=-Wall -g -Og -mmcu=atmega328p
 
 USART=drivers/USART
 TIMER=drivers/TIMER
