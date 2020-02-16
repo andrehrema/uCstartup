@@ -17,3 +17,8 @@ Para o projeto foram projetadas as seguintes características:
 O diagrama 1 representa a topologia de comunicação entre os dispositivos da rede.
 
 ![diagrama de conexões](https://github.com/andrehrema/uCstartup/blob/master/Topologia%20de%20conex%C3%B5es.png)
+
+Cada recepção (UART e MQTT) será interpretada como interrupções, que se comunicarão com os processos através de queues.
+Durante as interrupções havéra verificação de se um final de mensagem foi enviado, caso sim, a mensagem é montada e enviada para a fila de envio, que por sua vez acorda as tarefas bloqueadas.
+
+Cada envio de informação (UART e MQTT) é interpretado como uma tarefa bloqueada, que será ativa no momento de enviar uma mensagem. 
