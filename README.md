@@ -16,4 +16,4 @@ Para o projeto foram projetadas as seguintes características:
 
 O diagrama 1 representa a topologia de comunicação entre os dispositivos da rede.
 
-![diagrama de conexões][./Topologia\ de\ conexões.png]
+![diagrama de conexões][https://github.com/andrehrema/uCstartup/blob/master/Topologia%20de%20conex%C3%B5es.png]
