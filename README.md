@@ -22,3 +22,7 @@ Cada recepção (UART e MQTT) será interpretada como interrupções, que se com
 Durante as interrupções havéra verificação de se um final de mensagem foi enviado, caso sim, a mensagem é montada e enviada para a fila de envio, que por sua vez acorda as tarefas bloqueadas.
 
 Cada envio de informação (UART e MQTT) é interpretado como uma tarefa bloqueada, que será ativa no momento de enviar uma mensagem. 
+
+
+A seguinte página explica o processo de montagem de um projeto usando o ESP_RTOS_SDK:
+https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/api-guides/build-system.html
